@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facial Recognition Attendance</title>
+</head>
+<body>
+    <h1>Facial Recognition Attendance System</h1>
+    
+    <div>
+        <video id="video_feed" width="640" height="480" autoplay></video>
+    </div>
+    
+    <br>
+    
+    <button id="capture_button">Capture Attendance</button>
+
+    <script>
+        // Function to start webcam video streaming
+        async function startVideoStream() {
+            const videoElement = document.getElementById('video_feed');
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                videoElement.srcObject = stream;
+            } catch (error) {
+                console.error('Error accessing webcam:', error);
+            }
+        }
+
+        // Function to capture attendance via AJAX POST request
+        function captureAttendance() {
+            fetch('/capture_attendance', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ action: 'capture' })
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Attendance captured successfully');
+                } else {
+                    console.error('Failed to capture attendance');
+                }
+            })
+            .catch(error => {
+                console.error('Error capturing attendance:', error);
+            });
+        }
+
+        // Start video streaming when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            startVideoStream();
+
+            // Attach click event listener to the capture button
+            const captureButton = document.getElementById('capture_button');
+            captureButton.addEventListener('click', captureAttendance);
+        });
+    </script>
+</body>
+</html>

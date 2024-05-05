@@ -1,0 +1,10 @@
+h1{
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    background-color: lightblue;
+  }
+  img{
+    border-radius: 20px;
+    box-shadow: 0 0px 10px #1dd71d;
+  }
