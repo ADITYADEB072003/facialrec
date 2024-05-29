@@ -4,17 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Face Recognition</title>
+    <style>
+        .log-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+            max-height: 200px; /* Adjust as needed */
+            overflow-y: auto; /* Enable scrollbar if content exceeds container height */
+        }
+        .log-message {
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body>
     <h1>Real-Time Face Recognition</h1>
     <video id="video" width="640" height="480" autoplay></video>
     <canvas id="canvas" style="display: none;"></canvas>
+    <div class="log-container" id="log-container"></div> <!-- Container for log messages -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.min.js"></script>
     <script>
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const context = canvas.getContext('2d');
         const socket = io();
+        const logContainer = document.getElementById('log-container'); // Reference to log container
+        const loggedStudentIDs = new Set(); // Set to track logged student IDs
 
         // Get access to the camera
         navigator.mediaDevices.getUserMedia({ video: true })
@@ -43,6 +58,17 @@
             img.onload = () => {
                 context.drawImage(img, 0, 0, canvas.width, canvas.height);
             };
+        });
+
+        // Listen for messages from the server and display them in the log container
+        socket.on('terminal_message', message => {
+            if (!loggedStudentIDs.has(message)) {
+                const p = document.createElement('p');
+                p.textContent = message;
+                p.classList.add('log-message'); // Add class to style log messages
+                logContainer.appendChild(p);
+                loggedStudentIDs.add(message);
+            }
         });
     </script>
 </body>

@@ -17,11 +17,11 @@ socketio = SocketIO(app)
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Path to the directory containing student images
-images_dir = 'Images/BCA 4'
+images_dir = '/Users/adityadebchowdhury/Desktop/Desktop - Aditya’s MacBook Air/opencv2/flask/testcode/Images/BCA 4'
 # Path to store and load encodings
-encoding_file = 'Images/BCA 4/known_encodings.pkl'
+encoding_file = '/Users/adityadebchowdhury/Desktop/Desktop - Aditya’s MacBook Air/opencv2/flask/testcode/Images/BCA 4/known_encodings.pkl'
 # Path to the CSV file to record recognized faces
-recognized_faces_csv = 'Images/BCA 4/recognized_faces.csv'
+recognized_faces_csv = '/Users/adityadebchowdhury/Desktop/Desktop - Aditya’s MacBook Air/opencv2/flask/testcode/Images/BCA 4/recognized_faces.csv'
 # Initialize known_students dictionary
 known_students = {}
 recognized_faces = set()  # Set to store recognized faces
@@ -123,6 +123,9 @@ def log_recognized_face(student_id, student_name):
     # Check if the student ID has already been logged
     if student_id in logged_student_ids:
         logging.info(f"Student ID {student_id} already logged. Skipping.")
+        # Inside log_recognized_face function
+        socketio.emit('terminal_message', f"Student ID {student_id} already logged. Skipping.")
+
         return
 
     # Generate a unique key for each recognized face
