@@ -31,16 +31,22 @@
         const logContainer = document.getElementById('log-container'); // Reference to log container
         const loggedStudentIDs = new Set(); // Set to track logged student IDs
 
-        // Get access to the camera
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-                video.srcObject = stream;
-                video.play();
-            })
-            .catch(err => {
-                console.error("Error accessing webcam: " + err);
-            });
+        // Function to initialize the back camera
+        function initBackCamera() {
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+                .then(stream => {
+                    video.srcObject = stream;
+                    video.play();
+                })
+                .catch(err => {
+                    console.error("Error accessing back camera: " + err);
+                });
+        }
 
+        // Initialize the back camera
+        initBackCamera();
+
+        // Function to send frames to the server
         video.addEventListener('play', () => {
             setInterval(() => {
                 canvas.width = video.videoWidth;
@@ -52,6 +58,7 @@
             }, 100); // Send frames every 100 ms
         });
 
+        // Receive and display frames from the server
         socket.on('message', data => {
             const img = new Image();
             img.src = 'data:image/jpeg;base64,' + data;
